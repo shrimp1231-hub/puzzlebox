@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/minesweeper_types.dart';
-import '../utils/minesweeper_logic.dart';
+import '../utils/minesweeper_logic.dart' as logic;
 
 const _saveKey = 'minesweeper_save_v1';
 
@@ -39,7 +39,7 @@ class MinesweeperProvider extends ChangeNotifier {
   Future<void> newGame(MinesweeperDifficulty difficulty) async {
     _timer?.cancel();
     _difficulty = difficulty;
-    _grid = createEmptyGrid(difficulty.rows, difficulty.cols);
+    _grid = logic.createEmptyGrid(difficulty.rows, difficulty.cols);
     _status = MinesweeperStatus.playing;
     _minesPlaced = false;
     _flagCount = 0;
@@ -56,20 +56,20 @@ class MinesweeperProvider extends ChangeNotifier {
 
     // Start timer on first action
     if (!_minesPlaced) {
-      _grid = placeMines(_grid, rows, cols, _difficulty.mineCount, row, col, Random());
+      _grid = logic.placeMines(_grid, rows, cols, _difficulty.mineCount, row, col, Random());
       _minesPlaced = true;
       _startTimer();
     }
 
     // Chord on already-revealed number
     if (cell.status == CellStatus.revealed && cell.adjacentMines > 0) {
-      final result = chordReveal(_grid, rows, cols, row, col);
+      final result = logic.chordReveal(_grid, rows, cols, row, col);
       if (result == null) {
         _triggerGameOver(row, col);
         return;
       }
       _grid = result;
-      if (checkWin(_grid, rows, cols)) _triggerWin();
+      if (logic.checkWin(_grid, rows, cols)) _triggerWin();
       notifyListeners();
       _save();
       return;
@@ -82,13 +82,13 @@ class MinesweeperProvider extends ChangeNotifier {
       return;
     }
 
-    final result = revealCell(_grid, rows, cols, row, col);
+    final result = logic.revealCell(_grid, rows, cols, row, col);
     if (result == null) {
       _triggerGameOver(row, col);
       return;
     }
     _grid = result;
-    if (checkWin(_grid, rows, cols)) _triggerWin();
+    if (logic.checkWin(_grid, rows, cols)) _triggerWin();
     notifyListeners();
     _save();
   }
@@ -112,7 +112,7 @@ class MinesweeperProvider extends ChangeNotifier {
   void _triggerGameOver(int row, int col) {
     _timer?.cancel();
     _status = MinesweeperStatus.gameOver;
-    _grid = revealAllMines(_grid, rows, cols, row, col);
+    _grid = logic.revealAllMines(_grid, rows, cols, row, col);
     notifyListeners();
     _save();
   }
