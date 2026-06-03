@@ -16,11 +16,6 @@ dependencies:
   google_fonts: ^6.1.0
   flutter_animate: ^4.3.0
   gap: ^3.0.1
-  # TODO: add credentials via OneCLI before enabling these
-  supabase_flutter: ^2.3.4
-  google_sign_in: ^6.2.1
-  # TODO: add real AdMob App IDs to AndroidManifest.xml / Info.plist before enabling
-  google_mobile_ads: ^5.1.0
 
 dev_dependencies:
   flutter_test:
