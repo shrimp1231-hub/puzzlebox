@@ -12,6 +12,7 @@ class GameInfo {
   final Color gradientTo;
   final bool isUnlocked;
   final String? comingSoonLabel;
+  final int difficulty; // 1-5 stars
 
   const GameInfo({
     required this.id,
@@ -22,6 +23,7 @@ class GameInfo {
     required this.gradientTo,
     this.isUnlocked = true,
     this.comingSoonLabel,
+    this.difficulty = 3,
   });
 }
 
@@ -33,6 +35,7 @@ final List<GameInfo> allGames = [
     emoji: '🔢',
     gradientFrom: AppColors.sudokuFrom,
     gradientTo: AppColors.sudokuTo,
+    difficulty: 3,
   ),
   const GameInfo(
     id: GameId.game2048,
@@ -41,6 +44,7 @@ final List<GameInfo> allGames = [
     emoji: '🎮',
     gradientFrom: AppColors.game2048From,
     gradientTo: AppColors.game2048To,
+    difficulty: 2,
   ),
   const GameInfo(
     id: GameId.minesweeper,
@@ -49,5 +53,6 @@ final List<GameInfo> allGames = [
     emoji: '💣',
     gradientFrom: AppColors.minesweeperFrom,
     gradientTo: AppColors.minesweeperTo,
+    difficulty: 4,
   ),
 ];

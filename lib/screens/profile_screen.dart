@@ -39,16 +39,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         title: const Text('프로필', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
-      body: Consumer2<AuthProvider, PointProvider>(
-        builder: (context, auth, points, _) {
-          if (auth.state == AuthState.loading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (!auth.isAuthenticated) {
-            return _buildSignInView(context, auth);
-          }
-          return _buildProfileView(context, auth, points);
-        },
+      body: SafeArea(
+        top: false,
+        child: Consumer2<AuthProvider, PointProvider>(
+          builder: (context, auth, points, _) {
+            if (auth.state == AuthState.loading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (!auth.isAuthenticated) {
+              return _buildSignInView(context, auth);
+            }
+            return _buildProfileView(context, auth, points);
+          },
+        ),
       ),
     );
   }

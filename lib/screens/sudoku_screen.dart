@@ -139,6 +139,7 @@ class _SudokuBody extends StatelessWidget {
 
   Widget _buildGameBody(BuildContext context, SudokuProvider provider) {
     return SafeArea(
+      top: false,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(

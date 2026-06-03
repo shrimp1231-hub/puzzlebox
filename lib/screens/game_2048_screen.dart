@@ -71,6 +71,7 @@ class _Game2048ScreenState extends State<Game2048Screen> {
           });
 
           return SafeArea(
+            top: false,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(

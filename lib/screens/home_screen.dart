@@ -38,17 +38,27 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(child: _buildHeader(context)),
-            SliverToBoxAdapter(child: _buildStatsRow()),
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
-              sliver: _buildGameGrid(),
+      body: Stack(
+        children: [
+          // 배경 라디알 핫스팟
+          _Hotspot(color: AppColors.hotspot1, opacity: 0.08, left: -120, top: -120),
+          _Hotspot(color: AppColors.hotspot2, opacity: 0.05, right: -120, bottom: -120),
+          // 메인 콘텐츠
+          SafeArea(
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(child: _buildHeader(context)),
+                SliverToBoxAdapter(child: _buildStatsRow()),
+                SliverToBoxAdapter(child: _buildFeaturedCard(context)),
+                SliverToBoxAdapter(child: _buildSectionLabel('전체 게임')),
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(20, 4, 20, 32),
+                  sliver: _buildGameGrid(),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -167,13 +177,163 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildFeaturedCard(BuildContext context) {
+    final game = allGames[0]; // 스도쿠 — 인기 1위
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      child: GestureDetector(
+        onTap: () => _onGameTap(context, game),
+        child: Container(
+          height: 180,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [game.gradientFrom, game.gradientTo],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: game.gradientFrom.withOpacity(0.4),
+                blurRadius: 28,
+                offset: const Offset(0, 12),
+              ),
+            ],
+          ),
+          child: Stack(
+            children: [
+              // 배경 장식
+              Positioned(
+                right: -30,
+                top: -30,
+                child: Container(
+                  width: 160,
+                  height: 160,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.07),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+              Positioned(
+                left: -20,
+                bottom: -40,
+                child: Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.05),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+              // 인기 뱃지
+              Positioned(
+                top: 16,
+                left: 16,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.local_fire_department_rounded, color: Colors.white, size: 12),
+                      SizedBox(width: 4),
+                      Text('인기 게임', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700)),
+                    ],
+                  ),
+                ),
+              ),
+              // 이모지
+              Positioned(
+                right: 24,
+                top: 0,
+                bottom: 0,
+                child: Center(
+                  child: Text(game.emoji, style: const TextStyle(fontSize: 72)),
+                ),
+              ),
+              // 텍스트 영역
+              Positioned(
+                left: 20,
+                bottom: 20,
+                right: 120,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      game.title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 26,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: List.generate(
+                        5,
+                        (i) => Icon(
+                          i < game.difficulty ? Icons.star_rounded : Icons.star_outline_rounded,
+                          size: 13,
+                          color: Colors.white.withOpacity(i < game.difficulty ? 0.9 : 0.3),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.22),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+                      ),
+                      child: const Text(
+                        '지금 플레이',
+                        style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        )
+            .animate(delay: 200.ms)
+            .fadeIn(duration: 400.ms)
+            .slideY(begin: 0.1, end: 0, curve: Curves.easeOut, duration: 400.ms),
+      ),
+    );
+  }
+
+  Widget _buildSectionLabel(String label) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: AppColors.textSecondary,
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.2,
+        ),
+      ),
+    );
+  }
+
   SliverGrid _buildGameGrid() {
     return SliverGrid(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 14,
         mainAxisSpacing: 14,
-        childAspectRatio: 0.9,
+        childAspectRatio: 0.8, // 4:5 세로형
       ),
       delegate: SliverChildBuilderDelegate(
         (context, index) {
@@ -192,20 +352,50 @@ class _HomeScreenState extends State<HomeScreen> {
   void _onGameTap(BuildContext context, GameInfo game) {
     switch (game.id) {
       case GameId.sudoku:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const SudokuScreen()),
-        );
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const SudokuScreen()));
       case GameId.game2048:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const Game2048Screen()),
-        );
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const Game2048Screen()));
       case GameId.minesweeper:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const MinesweeperScreen()),
-        );
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const MinesweeperScreen()));
     }
+  }
+}
+
+class _Hotspot extends StatelessWidget {
+  final Color color;
+  final double opacity;
+  final double? left;
+  final double? right;
+  final double? top;
+  final double? bottom;
+
+  const _Hotspot({
+    required this.color,
+    required this.opacity,
+    this.left,
+    this.right,
+    this.top,
+    this.bottom,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      left: left,
+      right: right,
+      top: top,
+      bottom: bottom,
+      child: Container(
+        width: 320,
+        height: 320,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: RadialGradient(
+            colors: [color.withOpacity(opacity), Colors.transparent],
+            radius: 1.0,
+          ),
+        ),
+      ),
+    );
   }
 }

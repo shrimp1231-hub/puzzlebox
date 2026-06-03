@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../models/game_info.dart';
-import '../theme/app_theme.dart';
 
 class GameCard extends StatefulWidget {
   final GameInfo game;
@@ -50,9 +49,9 @@ class _GameCardState extends State<GameCard> {
             boxShadow: game.isUnlocked
                 ? [
                     BoxShadow(
-                      color: game.gradientFrom.withOpacity(0.3),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
+                      color: game.gradientFrom.withOpacity(0.35),
+                      blurRadius: 24,
+                      offset: const Offset(0, 10),
                     ),
                   ]
                 : null,
@@ -64,85 +63,129 @@ class _GameCardState extends State<GameCard> {
                 right: -20,
                 bottom: -20,
                 child: Container(
-                  width: 100,
-                  height: 100,
+                  width: 110,
+                  height: 110,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.08),
+                    color: Colors.white.withOpacity(0.07),
                     shape: BoxShape.circle,
                   ),
                 ),
               ),
               Positioned(
-                right: 20,
-                top: -30,
+                right: 16,
+                top: -24,
                 child: Container(
-                  width: 60,
-                  height: 60,
+                  width: 64,
+                  height: 64,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.06),
+                    color: Colors.white.withOpacity(0.05),
                     shape: BoxShape.circle,
                   ),
                 ),
               ),
 
               // 카드 내용
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // 이모지 + 잠금 아이콘
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 상단 60% — 이모지 영역
+                  Expanded(
+                    flex: 6,
+                    child: Stack(
                       children: [
-                        Text(
-                          game.emoji,
-                          style: const TextStyle(fontSize: 36),
+                        Center(
+                          child: Text(
+                            game.emoji,
+                            style: TextStyle(
+                              fontSize: game.isUnlocked ? 52 : 40,
+                            ),
+                          ),
                         ),
                         if (!game.isUnlocked)
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.black26,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              game.comingSoonLabel ?? 'Soon',
-                              style: const TextStyle(
-                                color: Colors.white70,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
+                          Positioned(
+                            top: 12,
+                            right: 12,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.black26,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                game.comingSoonLabel ?? 'Soon',
+                                style: const TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
                       ],
                     ),
-                    const Spacer(),
-                    Text(
-                      game.title,
-                      style: TextStyle(
-                        color: game.isUnlocked ? Colors.white : Colors.white54,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: -0.3,
+                  ),
+
+                  // 하단 40% — 게임 정보
+                  Expanded(
+                    flex: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            game.title,
+                            style: TextStyle(
+                              color: game.isUnlocked ? Colors.white : Colors.white54,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0.3,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          // 난이도 별점
+                          Row(
+                            children: List.generate(
+                              5,
+                              (i) => Icon(
+                                i < game.difficulty ? Icons.star_rounded : Icons.star_outline_rounded,
+                                size: 11,
+                                color: game.isUnlocked
+                                    ? Colors.white.withOpacity(i < game.difficulty ? 0.9 : 0.3)
+                                    : Colors.white24,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          // 플레이 버튼
+                          Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(game.isUnlocked ? 0.22 : 0.08),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(game.isUnlocked ? 0.3 : 0.1),
+                                width: 1,
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                game.isUnlocked ? '플레이' : '잠금',
+                                style: TextStyle(
+                                  color: game.isUnlocked ? Colors.white : Colors.white38,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 0.2,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      game.subtitle,
-                      style: TextStyle(
-                        color: game.isUnlocked
-                            ? Colors.white.withOpacity(0.75)
-                            : Colors.white30,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),

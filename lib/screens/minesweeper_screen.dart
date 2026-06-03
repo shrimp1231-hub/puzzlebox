@@ -101,16 +101,19 @@ class _MinesweeperScreenState extends State<MinesweeperScreen> {
             return const SizedBox.shrink();
           }
 
-          return Column(
-            children: [
-              _StatusBar(provider: provider, formatTime: _formatTime),
-              Expanded(
-                child: MinesweeperBoard(provider: provider)
-                    .animate()
-                    .fadeIn(duration: 300.ms),
-              ),
-              _HintRow(minesPlaced: provider.minesPlaced),
-            ],
+          return SafeArea(
+            top: false,
+            child: Column(
+              children: [
+                _StatusBar(provider: provider, formatTime: _formatTime),
+                Expanded(
+                  child: MinesweeperBoard(provider: provider)
+                      .animate()
+                      .fadeIn(duration: 300.ms),
+                ),
+                _HintRow(minesPlaced: provider.minesPlaced),
+              ],
+            ),
           );
         },
       ),

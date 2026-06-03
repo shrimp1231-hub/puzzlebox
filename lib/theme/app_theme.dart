@@ -8,12 +8,16 @@ class AppColors {
   static const border = Color(0xFF2A2A4A);
 
   // 게임 카드 색상
-  static const sudokuFrom = Color(0xFF6C63FF);
-  static const sudokuTo = Color(0xFF3B82F6);
-  static const game2048From = Color(0xFFFF6B6B);
-  static const game2048To = Color(0xFFFECA57);
-  static const minesweeperFrom = Color(0xFF48CAE4);
-  static const minesweeperTo = Color(0xFF023E8A);
+  static const sudokuFrom = Color(0xFF7C3AED);
+  static const sudokuTo = Color(0xFF2563EB);
+  static const game2048From = Color(0xFFDC2626);
+  static const game2048To = Color(0xFFF59E0B);
+  static const minesweeperFrom = Color(0xFF06B6D4);
+  static const minesweeperTo = Color(0xFF1E3A8A);
+
+  // 배경 핫스팟
+  static const hotspot1 = Color(0xFF6C63FF);
+  static const hotspot2 = Color(0xFFFF6B9D);
 
   // UI 요소
   static const textPrimary = Color(0xFFE8E8F0);

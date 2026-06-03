@@ -58,18 +58,21 @@ class _CharacterScreenState extends State<CharacterScreen>
           ),
         ],
       ),
-      body: Column(
-        children: [
-          _CharacterPreview(),
-          const SizedBox(height: 8),
-          _CategoryTabBar(controller: _tabController, categories: _categories),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: _categories.map((cat) => _ItemGrid(category: cat)).toList(),
+      body: SafeArea(
+        top: false,
+        child: Column(
+          children: [
+            _CharacterPreview(),
+            const SizedBox(height: 8),
+            _CategoryTabBar(controller: _tabController, categories: _categories),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: _categories.map((cat) => _ItemGrid(category: cat)).toList(),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
